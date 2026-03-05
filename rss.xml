@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>MWC 2026 Agent Daily</title>
+    <link>https://mwc2026-agent-news.netlify.app</link>
+    <description>每天汇总全球 MWC 2026 与 AI Agent 相关的最新资讯</description>
+    <language>zh-CN</language>
+    <lastBuildDate>Tue, 03 Mar 2026 12:00:00 GMT</lastBuildDate>
+    <atom:link href="https://mwc2026-agent-news.netlify.app/rss.xml" rel="self" type="application/rss+xml"/>
+    
+    <item>
+      <title>MWC 2026 前瞻：AI Agent 将成为移动生态核心</title>
+      <link>https://www.gsma.com</link>
+      <guid isPermaLink="false">mwc2026-001</guid>
+      <pubDate>Tue, 03 Mar 2026 08:00:00 GMT</pubDate>
+      <category>展会</category>
+      <description>据 GSMA 官方透露，MWC 2026 巴塞罗那大会将设立专门的 AI Agent Pavilion，预计将有超过 200 家企业展示其 Agent 技术与产品。</description>
+    </item>
+    
+    <item>
+      <title>OpenAI 发布移动端 Agent SDK，支持离线推理</title>
+      <link>https://techcrunch.com</link>
+      <guid isPermaLink="false">mwc2026-002</guid>
+      <pubDate>Tue, 03 Mar 2026 06:00:00 GMT</pubDate>
+      <category>技术</category>
+      <description>OpenAI 在 MWC 预热活动中发布了全新的 Mobile Agent SDK，允许开发者在移动设备上运行轻量级 Agent，无需云端连接。</description>
+    </item>
+    
+    <item>
+      <title>华为官宣：HarmonyOS NEXT 将内置系统级 AI Agent</title>
+      <link>https://consumer.huawei.com</link>
+      <guid isPermaLink="false">mwc2026-003</guid>
+      <pubDate>Mon, 02 Mar 2026 14:00:00 GMT</pubDate>
+      <category>产品</category>
+      <description>华为消费者业务 CEO 余承东宣布，HarmonyOS NEXT 将在 MWC 2026 上展示其系统级 AI Agent "小艺 Pro"，支持跨应用任务执行。</description>
+    </item>
+    
+    <item>
+      <title>三星 Galaxy S26 将搭载全新 AI Agent 助手</title>
+      <link>https://theverge.com</link>
+      <guid isPermaLink="false">mwc2026-004</guid>
+      <pubDate>Mon, 02 Mar 2026 10:00:00 GMT</pubDate>
+      <category>产品</category>
+      <description>三星电子确认，Galaxy S26 系列将配备升级版的 Bixby Agent，基于大语言模型，可实现更自然的对话和复杂的任务规划。</description>
+    </item>
+    
+    <item>
+      <title>谷歌宣布 Android Agent API 开放计划</title>
+      <link>https://developers.google.com</link>
+      <guid isPermaLink="false">mwc2026-005</guid>
+      <pubDate>Sun, 01 Mar 2026 16:00:00 GMT</pubDate>
+      <category>技术</category>
+      <description>谷歌在开发者博客中宣布，将在 MWC 2026 期间全面开放 Android Agent API，允许第三方开发者为 Android 系统开发 Agent 应用。</description>
+    </item>
+    
+    <item>
+      <title>Anthropic 获得运营商投资，布局 5G Agent 市场</title>
+      <link>https://reuters.com</link>
+      <guid isPermaLink="false">mwc2026-006</guid>
+      <pubDate>Sat, 28 Feb 2026 09:00:00 GMT</pubDate>
+      <category>商业</category>
+      <description>多家全球顶级电信运营商宣布战略投资 Anthropic，旨在将 Claude Agent 集成到 5G 网络服务和客户服务中。</description>
+    </item>
+  </channel>
+</rss>

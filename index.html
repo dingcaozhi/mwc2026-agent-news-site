@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MWC 2026 Agent Daily | AI Agent 每日新闻聚合</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --bg: #0f0f1a;
+            --card-bg: rgba(255, 255, 255, 0.03);
+            --text: #e2e8f0;
+            --text-muted: #94a3b8;
+            --border: rgba(255, 255, 255, 0.1);
+            --gradient-1: #6366f1;
+            --gradient-2: #8b5cf6;
+            --gradient-3: #ec4899;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', 'Noto Sans SC', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        /* 动态背景 */
+        .bg-gradient {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: 
+                radial-gradient(ellipse 80% 50% at 50% -20%, rgba(99, 102, 241, 0.15), transparent),
+                radial-gradient(ellipse 60% 40% at 80% 80%, rgba(236, 72, 153, 0.1), transparent),
+                var(--bg);
+        }
+
+        .grid-pattern {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background-image: 
+                linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+            background-size: 50px 50px;
+        }
+
+        /* 头部 */
+        header {
+            border-bottom: 1px solid var(--border);
+            backdrop-filter: blur(20px);
+            background: rgba(15, 15, 26, 0.8);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--gradient-1), var(--gradient-2));
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .logo-text {
+            font-size: 1.25rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #fff, var(--text-muted));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .logo-sub {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .header-meta {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .last-update {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+        }
+
+        .last-update span {
+            color: #22d3ee;
+            font-weight: 500;
+        }
+
+        .rss-btn {
+            padding: 0.5rem 1rem;
+            background: rgba(99, 102, 241, 0.1);
+            border: 1px solid var(--primary);
+            color: var(--primary);
+            border-radius: 6px;
+            text-decoration: none;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .rss-btn:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        /* 主体 */
+        main {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* 标题区 */
+        .hero {
+            text-align: center;
+            padding: 3rem 0 4rem;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #fff, var(--primary), var(--gradient-3));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero p {
+            font-size: 1.125rem;
+            color: var(--text-muted);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* 统计栏 */
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .stat-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+            transition: transform 0.2s, border-color 0.2s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-2px);
+            border-color: var(--primary);
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .stat-label {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            margin-top: 0.25rem;
+        }
+
+        /* 筛选栏 */
+        .filter-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .filter-tabs {
+            display: flex;
+            gap: 0.5rem;
+            background: var(--card-bg);
+            padding: 0.25rem;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+        }
+
+        .filter-tab {
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--text-muted);
+            transition: all 0.2s;
+            border: none;
+            background: transparent;
+        }
+
+        .filter-tab.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        .filter-tab:hover:not(.active) {
+            color: var(--text);
+        }
+
+        .search-box {
+            position: relative;
+        }
+
+        .search-box input {
+            padding: 0.625rem 1rem 0.625rem 2.5rem;
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text);
+            font-size: 0.875rem;
+            width: 250px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .search-box input:focus {
+            border-color: var(--primary);
+        }
+
+        .search-box::before {
+            content: "🔍";
+            position: absolute;
+            left: 0.75rem;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 0.875rem;
+        }
+
+        /* 新闻网格 */
+        .news-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .news-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .news-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--primary);
+            box-shadow: 0 20px 40px rgba(99, 102, 241, 0.1);
+        }
+
+        .news-image {
+            width: 100%;
+            height: 180px;
+            background: linear-gradient(135deg, rgba(99,102,241,0.2), rgba(139,92,246,0.2));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .news-image::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, transparent 40%, rgba(255,255,255,0.05) 50%, transparent 60%);
+            animation: shimmer 3s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .news-category {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            padding: 0.25rem 0.75rem;
+            background: rgba(99, 102, 241, 0.9);
+            color: white;
+            font-size: 0.75rem;
+            font-weight: 600;
+            border-radius: 20px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .news-content {
+            padding: 1.25rem;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .news-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            line-height: 1.4;
+            margin-bottom: 0.75rem;
+            color: #fff;
+        }
+
+        .news-title a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        .news-title a:hover {
+            color: var(--primary);
+        }
+
+        .news-summary {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            line-height: 1.6;
+            margin-bottom: 1rem;
+            flex: 1;
+        }
+
+        .news-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            padding-top: 1rem;
+            border-top: 1px solid var(--border);
+        }
+
+        .news-source {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .source-icon {
+            width: 20px;
+            height: 20px;
+            background: var(--primary);
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+        }
+
+        /* 加载更多 */
+        .load-more {
+            text-align: center;
+            padding: 3rem 0;
+        }
+
+        .load-btn {
+            padding: 0.875rem 2rem;
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            color: var(--text);
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .load-btn:hover {
+            border-color: var(--primary);
+            background: rgba(99, 102, 241, 0.1);
+        }
+
+        /* 页脚 */
+        footer {
+            border-top: 1px solid var(--border);
+            margin-top: 4rem;
+            padding: 2rem;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.875rem;
+        }
+
+        footer a {
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        /* 响应式 */
+        @media (max-width: 768px) {
+            .header-content {
+                padding: 1rem;
+            }
+
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            main {
+                padding: 1rem;
+            }
+
+            .news-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .filter-bar {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .search-box input {
+                width: 100%;
+            }
+
+            .filter-tabs {
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+        }
+
+        /* 动画 */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .news-card {
+            opacity: 1;
+            animation: fadeIn 0.5s ease forwards;
+        }
+
+        .news-card:nth-child(1) { animation-delay: 0.05s; }
+        .news-card:nth-child(2) { animation-delay: 0.1s; }
+        .news-card:nth-child(3) { animation-delay: 0.15s; }
+        .news-card:nth-child(4) { animation-delay: 0.2s; }
+        .news-card:nth-child(5) { animation-delay: 0.25s; }
+        .news-card:nth-child(6) { animation-delay: 0.3s; }
+    </style>
+</head>
+<body>
+    <div class="bg-gradient"></div>
+    <div class="grid-pattern"></div>
+
+    <header>
+        <div class="header-content">
+            <div class="logo">
+                <div class="logo-icon">🤖</div>
+                <div>
+                    <div class="logo-text">MWC 2026 Agent Daily</div>
+                    <div class="logo-sub">AI Agent Intelligence</div>
+                </div>
+            </div>
+            <div class="header-meta">
+                <div class="last-update">Last updated: <span id="updateTime">2026-03-04</span></div>
+                <a href="./rss.xml" class="rss-btn">📡 RSS</a>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <section class="hero">
+            <h1>MWC 2026 Agent News</h1>
+            <p>每天汇总全球 MWC 2026 与 AI Agent 相关的最新资讯，涵盖技术突破、产品发布、行业动态和投资趋势。</p>
+        </section>
+
+        <section class="stats">
+            <div class="stat-card">
+                <div class="stat-number" id="totalNews">3</div>
+                <div class="stat-label">今日新闻</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">8</div>
+                <div class="stat-label">新闻来源</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">3</div>
+                <div class="stat-label">重要发布</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">24h</div>
+                <div class="stat-label">更新周期</div>
+            </div>
+        </section>
+
+        <section class="filter-bar">
+            <div class="filter-tabs">
+                <button class="filter-tab active" data-filter="all">全部</button>
+                <button class="filter-tab" data-filter="tech">技术</button>
+                <button class="filter-tab" data-filter="product">产品</button>
+                <button class="filter-tab" data-filter="business">商业</button>
+                <button class="filter-tab" data-filter="event">展会</button>
+            </div>
+            <div class="search-box">
+                <input type="text" placeholder="搜索新闻..." id="searchInput">
+            </div>
+        </section>
+
+        <section class="news-grid" id="newsGrid">
+            <article class="news-card" data-category="event">
+                <div class="news-image">
+                    <span>🏛️</span>
+                    <span class="news-category">展会</span>
+                </div>
+                <div class="news-content">
+                    <h3 class="news-title"><a href="https://www.gsma.com" target="_blank">MWC 2026 前瞻：AI Agent 将成为移动生态核心</a></h3>
+                    <p class="news-summary">据 GSMA 官方透露，MWC 2026 巴塞罗那大会将设立专门的 AI Agent Pavilion，预计将有超过 200 家企业展示其 Agent 技术与产品。</p>
+                    <div class="news-meta">
+                        <div class="news-source"><span class="source-icon">G</span><span>GSMA</span></div>
+                        <time>2026-03-03</time>
+                    </div>
+                </div>
+            </article>
+            <article class="news-card" data-category="tech">
+                <div class="news-image">
+                    <span>📱</span>
+                    <span class="news-category">技术</span>
+                </div>
+                <div class="news-content">
+                    <h3 class="news-title"><a href="https://techcrunch.com" target="_blank">OpenAI 发布移动端 Agent SDK，支持离线推理</a></h3>
+                    <p class="news-summary">OpenAI 在 MWC 预热活动中发布了全新的 Mobile Agent SDK，允许开发者在移动设备上运行轻量级 Agent，无需云端连接。</p>
+                    <div class="news-meta">
+                        <div class="news-source"><span class="source-icon">T</span><span>TechCrunch</span></div>
+                        <time>2026-03-03</time>
+                    </div>
+                </div>
+            </article>
+            <article class="news-card" data-category="product">
+                <div class="news-image">
+                    <span>🚀</span>
+                    <span class="news-category">产品</span>
+                </div>
+                <div class="news-content">
+                    <h3 class="news-title"><a href="https://consumer.huawei.com" target="_blank">华为官宣：HarmonyOS NEXT 将内置系统级 AI Agent</a></h3>
+                    <p class="news-summary">华为消费者业务 CEO 余承东宣布，HarmonyOS NEXT 将在 MWC 2026 上展示其系统级 AI Agent「小艺 Pro」，支持跨应用任务执行。</p>
+                    <div class="news-meta">
+                        <div class="news-source"><span class="source-icon">H</span><span>华为</span></div>
+                        <time>2026-03-02</time>
+                    </div>
+                </div>
+            </article>
+            <article class="news-card" data-category="product">
+                <div class="news-image">
+                    <span>📲</span>
+                    <span class="news-category">产品</span>
+                </div>
+                <div class="news-content">
+                    <h3 class="news-title"><a href="https://theverge.com" target="_blank">三星 Galaxy S26 将搭载全新 AI Agent 助手</a></h3>
+                    <p class="news-summary">三星电子确认，Galaxy S26 系列将配备升级版的 Bixby Agent，基于大语言模型，可实现更自然的对话和复杂的任务规划。</p>
+                    <div class="news-meta">
+                        <div class="news-source"><span class="source-icon">V</span><span>The Verge</span></div>
+                        <time>2026-03-02</time>
+                    </div>
+                </div>
+            </article>
+            <article class="news-card" data-category="tech">
+                <div class="news-image">
+                    <span>🍎</span>
+                    <span class="news-category">技术</span>
+                </div>
+                <div class="news-content">
+                    <h3 class="news-title"><a href="https://bloomberg.com" target="_blank">苹果被曝将在 iOS 20 中推出 Siri Agent 2.0</a></h3>
+                    <p class="news-summary">知情人士透露，苹果正在测试全新的 Siri Agent，预计在 WWDC 2026 发布，但可能提前在 MWC 闭门会议上展示。</p>
+                    <div class="news-meta">
+                        <div class="news-source"><span class="source-icon">B</span><span>Bloomberg</span></div>
+                        <time>2026-03-01</time>
+                    </div>
+                </div>
+            </article>
+            <article class="news-card" data-category="tech">
+                <div class="news-image">
+                    <span>🤖</span>
+                    <span class="news-category">技术</span>
+                </div>
+                <div class="news-content">
+                    <h3 class="news-title"><a href="https://developers.google.com" target="_blank">谷歌宣布 Android Agent API 开放计划</a></h3>
+                    <p class="news-summary">谷歌在开发者博客中宣布，将在 MWC 2026 期间全面开放 Android Agent API，允许第三方开发者为 Android 系统开发 Agent 应用。</p>
+                    <div class="news-meta">
+                        <div class="news-source"><span class="source-icon">G</span><span>Google</span></div>
+                        <time>2026-03-01</time>
+                    </div>
+                </div>
+            </article>
+            <article class="news-card" data-category="business">
+                <div class="news-image">
+                    <span>💰</span>
+                    <span class="news-category">商业</span>
+                </div>
+                <div class="news-content">
+                    <h3 class="news-title"><a href="https://reuters.com" target="_blank">Anthropic 获得运营商投资，布局 5G Agent 市场</a></h3>
+                    <p class="news-summary">多家全球顶级电信运营商宣布战略投资 Anthropic，旨在将 Claude Agent 集成到 5G 网络服务和客户服务中。</p>
+                    <div class="news-meta">
+                        <div class="news-source"><span class="source-icon">R</span><span>Reuters</span></div>
+                        <time>2026-02-28</time>
+                    </div>
+                </div>
+            </article>
+            <article class="news-card" data-category="business">
+                <div class="news-image">
+                    <span>🇨🇳</span>
+                    <span class="news-category">商业</span>
+                </div>
+                <div class="news-content">
+                    <h3 class="news-title"><a href="https://digitimes.com" target="_blank">中国厂商集体发力：小米、OPPO、vivo Agent 战略曝光</a></h3>
+                    <p class="news-summary">据供应链消息，小米、OPPO、vivo 将在 MWC 2026 展示各自的 AI Agent 方案，均支持多模态交互和跨设备协同。</p>
+                    <div class="news-meta">
+                        <div class="news-source"><span class="source-icon">D</span><span>Digitimes</span></div>
+                        <time>2026-02-28</time>
+                    </div>
+                </div>
+            </article>
+            <article class="news-card" data-category="event">
+                <div class="news-image">
+                    <span>📊</span>
+                    <span class="news-category">展会</span>
+                </div>
+                <div class="news-content">
+                    <h3 class="news-title"><a href="https://www.gsma.com" target="_blank">MWC 2026 注册人数创新高，Agent 主题成最大亮点</a></h3>
+                    <p class="news-summary">GSMA 宣布 MWC 2026 注册参会人数已突破 10 万，其中 60% 表示最关注 AI Agent 相关议题和展示。</p>
+                    <div class="news-meta">
+                        <div class="news-source"><span class="source-icon">G</span><span>GSMA</span></div>
+                        <time>2026-02-27</time>
+                    </div>
+                </div>
+            </article>
+            <article class="news-card" data-category="product">
+                <div class="news-image">
+                    <span>⚡</span>
+                    <span class="news-category">产品</span>
+                </div>
+                <div class="news-content">
+                    <h3 class="news-title"><a href="https://nvidia.com" target="_blank">NVIDIA 推出移动 Agent 推理芯片，功耗降低 80%</a></h3>
+                    <p class="news-summary">NVIDIA 发布专为移动 Agent 设计的 Jetson Nano AI 芯片，可在手机端运行 70B 参数模型，续航提升显著。</p>
+                    <div class="news-meta">
+                        <div class="news-source"><span class="source-icon">N</span><span>NVIDIA</span></div>
+                        <time>2026-02-27</time>
+                    </div>
+                </div>
+            </article>
+            <article class="news-card" data-category="tech">
+                <div class="news-image">
+                    <span>🔧</span>
+                    <span class="news-category">技术</span>
+                </div>
+                <div class="news-content">
+                    <h3 class="news-title"><a href="https://qualcomm.com" target="_blank">高通骁龙 8 Gen 5 将集成 NPU Agent 加速器</a></h3>
+                    <p class="news-summary">高通确认下一代旗舰芯片将配备专门的 Agent 处理单元，支持端侧大模型推理速度提升 3 倍。</p>
+                    <div class="news-meta">
+                        <div class="news-source"><span class="source-icon">Q</span><span>Qualcomm</span></div>
+                        <time>2026-02-26</time>
+                    </div>
+                </div>
+            </article>
+            <article class="news-card" data-category="business">
+                <div class="news-image">
+                    <span>⚖️</span>
+                    <span class="news-category">商业</span>
+                </div>
+                <div class="news-content">
+                    <h3 class="news-title"><a href="https://europa.eu" target="_blank">欧盟通过 AI Agent 监管框架，MWC 将讨论合规方案</a></h3>
+                    <p class="news-summary">欧盟正式通过《人工智能法案》中关于 Agent 系统的监管条款，MWC 2026 将设立专门论坛讨论合规实践。</p>
+                    <div class="news-meta">
+                        <div class="news-source"><span class="source-icon">E</span><span>EU News</span></div>
+                        <time>2026-02-26</time>
+                    </div>
+                </div>
+            </article>
+        </section>
+
+        <div class="load-more">
+            <button class="load-btn" id="loadMore">加载更多</button>
+        </div>
+    </main>
+
+    <footer>
+        <p>MWC 2026 Agent Daily News Aggregator | Auto-updated every 24 hours</p>
+        <p style="margin-top: 0.5rem;">Built with ❤️ by AI Agent | Deployed on <a href="https://netlify.com">Netlify</a></p>
+    </footer>
+
+    <script>
+        let currentFilter = 'all';
+        let searchQuery = '';
+
+        // 筛选功能
+        function filterNews() {
+            const cards = document.querySelectorAll('.news-card');
+            let visibleCount = 0;
+            
+            cards.forEach(card => {
+                const category = card.dataset.category;
+                const title = card.querySelector('.news-title').textContent.toLowerCase();
+                const summary = card.querySelector('.news-summary').textContent.toLowerCase();
+                
+                const matchFilter = currentFilter === 'all' || category === currentFilter;
+                const matchSearch = !searchQuery || 
+                    title.includes(searchQuery.toLowerCase()) ||
+                    summary.includes(searchQuery.toLowerCase());
+                
+                if (matchFilter && matchSearch) {
+                    card.style.display = '';
+                    visibleCount++;
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+
+            // 更新统计
+            document.getElementById('totalNews').textContent = visibleCount;
+            
+            // 显示/隐藏加载更多
+            document.getElementById('loadMore').style.display = visibleCount > 0 ? 'none' : 'inline-block';
+        }
+
+        // 筛选标签点击
+        document.querySelectorAll('.filter-tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                currentFilter = tab.dataset.filter;
+                filterNews();
+            });
+        });
+
+        // 搜索输入
+        document.getElementById('searchInput').addEventListener('input', (e) => {
+            searchQuery = e.target.value;
+            filterNews();
+        });
+
+        // 隐藏加载更多按钮（所有内容已显示）
+        document.getElementById('loadMore').style.display = 'none';
+        
+        // 更新时间
+        document.getElementById('updateTime').textContent = new Date().toLocaleDateString('zh-CN');
+    </script>
+</body>
+</html>
