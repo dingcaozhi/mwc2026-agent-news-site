@@ -2,11 +2,11 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>MWC 2026 Agent Daily</title>
-    <link>https://mwc2026-agent-news.netlify.app</link>
+    <link>https://dingcaozhi.github.io/mwc2026-agent-news-site/</link>
     <description>每天汇总全球 MWC 2026 与 AI Agent 相关的最新资讯</description>
     <language>zh-CN</language>
-    <lastBuildDate>Tue, 03 Mar 2026 12:00:00 GMT</lastBuildDate>
-    <atom:link href="https://mwc2026-agent-news.netlify.app/rss.xml" rel="self" type="application/rss+xml"/>
+    <lastBuildDate>Wed, 11 Mar 2026 00:00:00 GMT</lastBuildDate>
+    <atom:link href="https://dingcaozhi.github.io/mwc2026-agent-news-site/rss.xml" rel="self" type="application/rss+xml"/>
     
     <item>
       <title>MWC 2026 前瞻：AI Agent 将成为移动生态核心</title>
